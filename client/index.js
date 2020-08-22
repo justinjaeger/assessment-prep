@@ -82,14 +82,3 @@ async function loadList() {
   await new List(data);
 };
 loadList();
-// const data = 
-// fetch('/db') // the params we use to load the page
-//   .then(resp => resp.json())
-//   .then(resp => {
-//     console.log('fetching:', resp)
-//     return resp
-//   })
-//   .catch(err => {
-//     console.log('error while fetching from db', err);
-//   });
-// const loadList = new List();
