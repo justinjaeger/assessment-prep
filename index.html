@@ -6,12 +6,40 @@
   <title>Assessment Prep</title>
   <style>
     * {
-      margin: 0;
+      margin: 10;
+    }
+    #list {
+      border: 1px solid black;
+      padding: 10px;
+      width: 30%;
+    }
+    .list-item {
+      border: 1px solid black;
+      padding: 10px;
+    }
+    #form {
+      border: 1px solid black;
+      padding: 10px;
+      width: 30%;
+    }
+    button {
+      background-color: lightblue;
+      margin-right: 10px;
+    }
+    button:hover { cursor: pointer; }
+    form {
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
   This is index.html
+
+  <form type="text">
+    <input id="main-input" placeholder="Type here"></input>
+    <button id="submit-button">Submit</button>
+  </form>
+
 
   <script src='client/index.js'></script>
 </body>
