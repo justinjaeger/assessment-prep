@@ -1,84 +1,91 @@
-console.log('this is index.js')
+/*
+  This application generates a list generated from a MongoDB database
+  Allows client to type in an input field and submit, where it then appears in the list
+*/
 
-// ======= HELPER FUNCTION ======= //
+// ======================== //
+// === HELPER FUNCTIONS === //
+// ======================== //
+
 function newElement(TYPE, PARENTID, IDorCLASS, IDorClassNAME) {
-  // create
-  const el = document.createElement(TYPE);
-  // append
-  if (PARENTID === 'body') document.body.appendChild(el);
+  const el = document.createElement(TYPE); // create
+  if (PARENTID === 'body') document.body.appendChild(el); // append
   else document.getElementById(PARENTID).appendChild(el);
-  // set attribute
-  if (IDorClassNAME) el.setAttribute(IDorCLASS, IDorClassNAME)
-  // return
-  return el;
+  if (IDorClassNAME) el.setAttribute(IDorCLASS, IDorClassNAME) // set attribute
+  return el; // return
 };
 
-const button = document.querySelector('#submit-button');
-const input = document.querySelector('#main-input');
+// ====================== //
+// === EVENT HANDLERS === //
+// ====================== //
 
-// === Handle Click for Submitting Events === //
+const input = document.querySelector('#main-input'); // Main input field
+const button = document.querySelector('#submit-button'); // Submit button
+
+/*
+  When clicked, sends a POST request to the server with the input in the body
+  ... accessed as req.body.title
+*/
 button.addEventListener('click', () => {
   console.log(input.value)
   fetch('/db', {
     method: 'POST',
-    headers: {
-      "Content-Type": "Application/JSON"
-    },
-    body: JSON.stringify({title: input.value})
+    headers: { "Content-Type": "Application/JSON" },
+    body: JSON.stringify({ title: input.value })
   })
     .then(resp => resp.json())
-    .then(resp => {
-      console.log('list item added: ', resp)
-    })
-    .catch(err => {
-      console.log('error while posting to db', err);
-    });
+    .then(resp => console.log('list item added: ', resp))
+    .catch(err => console.log('error while posting to db', err));
 });
 
-// === Create List Container === //
-class List {
-  constructor(data) { // gets the data from the GET request @16
-    console.log('LIST')
-    // Make the list element in the DOM
-    const list = newElement('div', 'body', 'id', 'list')
-    list.innerHTML = 'I am a list';
+// ====================== //
+// === CONSTRUCT LIST === //
+// ====================== //
 
-    const array = []
-    array.map((el, i) => {
+/* 
+  Creates a list container in the DOM
+  Populates the list container with the list items from the data - an array of objects
+*/
 
-    })
+class ListContainer {
+  constructor(data) {
 
-    // Loop through data
-    for (let i=0; i<data.length; i++){
-      console.log('looping')
-      new ListElement(data[i])
-    }
+    const list = newElement('div', 'body', 'id', 'list');
+    data.map(el => new ListItem(el));
   }
 };
 
-// === Create List Elements === //
-class ListElement {
+/* 
+  Creates individual list elements in the DOM
+  Uses the data to get the title // our input // as inner html
+*/
+
+class ListItem {
   constructor(obj) {
-    console.log('LIST ELEMENT', obj)
 
-    const listItem = newElement('div', 'list', 'class', 'list-item')
-    listItem.innerHTML = obj.title
+    const listItem = newElement('div', 'list', 'class', 'list-item');
+    listItem.innerHTML = obj.title;
   }
 };
 
+// =============================== //
+// === GET DATA AND BUILD LIST === //
+// =============================== //
 
-// ======= GET-REQUEST FOR LIST DATA ======= //
+/* 
+  Makes a GET request to the server
+  Server responds with all of the data in an array of objects
+  Generate the list based on the data
+*/
+
 async function loadList() {
   const data =
-    await fetch('/db') // the params we use to load the page
+  await fetch('/db')
     .then(resp => resp.json())
-    .then(resp => {
-      console.log('fetching:', resp)
-      return resp
-    })
-    .catch(err => {
-      console.log('error while fetching from db', err);
-    });
-  await new List(data);
+    .then(resp => { return resp })
+    .catch(err => console.log('error while fetching from db', err));
+
+  await new ListContainer(data);
 };
+
 loadList();

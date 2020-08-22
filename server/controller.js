@@ -1,18 +1,25 @@
-// const fetch = require('node-fetch');
 const { ListItem } = require('./mongoose.js');
 
 const controller = {};
 
-//======= GET LIST ========//
+// ================ //
+// === GET LIST === //
+// ================ //
+
+/*
+  Retrieves all of the data from the ListItem schema
+  Returns the data in res.locals.list
+*/
+
 controller.getList = async (req, res, next) => {
-  console.log('getList')
   try {
     await ListItem.find({})
       .then(data => {
         res.locals.list = data;
         next();
       })
-  } catch (err) {
+  } 
+  catch (err) {
     return next({
       log: `An error occurred while getting list: ${err}`,
       message: { err: 'An error occurred in getList' },
@@ -20,7 +27,14 @@ controller.getList = async (req, res, next) => {
   }
 };
 
-//======= CREATE LIST ITEM ========//
+// ======================== //
+// === CREATE LIST ITEM === //
+// ======================== //
+
+/*
+  Creates a new list item based on the req.body
+*/
+
 controller.createListItem = async (req, res, next) => {
   console.log('createListItem', req.body)
   try {
@@ -32,12 +46,15 @@ controller.createListItem = async (req, res, next) => {
       console.log('item created');
       next();
     })
-  } catch(err) {
+  } 
+  catch(err) {
     return next({
       log: `An error occurred while adding list item: ${err}`,
       message: { err: 'An error occurred in createListItem' },
     });
   }
 };
+
+// ======================== //
 
 module.exports = controller;
